@@ -103,3 +103,16 @@ ylab = ylabel('\Deltax');
 max(y-yalt)
 
 %%
+
+load('opdracht4.mat')
+
+t1 = linspace(0,0.6,4);
+t2 = linspace(0.6,1.2,7);
+t3 = linspace(1.2,2,13);
+knp = [t1, t2(2:end-1),t3];
+
+x = linspace(knp(1),knp(end),10000);
+[A,b] = stelselsplineben(knp,(-3:-1)+knp(1),knp(end)+(1:3), t',f');
+y = evalsplineben(knp,(-3:-1)+knp(1),knp(end)+(1:3), t',f',10000);
+
+plot(x,y,'b',t',f','*r', 'MarkerSize',12)
