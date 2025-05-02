@@ -64,3 +64,42 @@ p = (1:10).^2;
 [A,b] = stelselsplineint(p,1:10,(-3:-1),(101:103));
 [L,U] = simple_lu_spline(A);
 disp((norm((A\b)' - Backsub_U(U,Backsub_L(L,b)))) / norm((A\b)'))
+
+%%
+
+load('opdracht4.mat')
+
+cond1 = t<0.6;
+cond2 = t>=0.6 & t<1.2;
+cond3 = t>=1.2;
+
+t1 = t(cond1);
+t2 = t(cond2);
+t3 = t(cond3);
+
+tnew = [t(1) t(6) t(9) t(12) t(14) t(16) t(18) t(20) t(21) t3'];
+fnew = [f(1) f(6) f(9) f(12) f(14) f(16) f(18) f(20) f(21) f(length([t1' t2'])+1:length(t),:)'];
+tbefore = t(1)+(-3:-1);
+tafter = t(end)+(1:3);
+
+x = linspace(t(1),t(end),10000);
+y = evalsplineint(t',f', tbefore,tafter,10000);
+yalt = evalsplineint(tnew,fnew, tbefore,tafter,10000);
+
+grayColor = [.7 .7 .7];
+
+%subplot(311)
+%plot(x,y,'b',t',f','*r', 'MarkerSize',12)
+%subplot(312)
+%plot(x,yalt,'b',tnew,fnew,'*r', 'MarkerSize',12)
+%subplot(313)
+plot(x,y-yalt,'r', linspace(t(1),t(end),100),zeros(100), '--g' )
+tit = title('Absolute fout tussen de interpolant van vraag 4 en vraag 10');
+leg = legend('Absolute fout');
+xlab = xlabel('x');
+ylab = ylabel('\Deltax');
+
+
+max(y-yalt)
+
+%%
