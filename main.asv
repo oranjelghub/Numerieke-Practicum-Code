@@ -66,10 +66,10 @@ for i = 200:10:2000
     onedimtimes = 1:10;
     x = 200:10:i;
     for j = 1:10
-        f = rand(length(x),1)';
+        f = rand(length(x),1);
         [A,b] = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
         tic
-        simple_lu_spline(A)
+        %simple_lu_spline(A)
         onedimtimes(j) = toc;
     end
     timevecsimple(index) = mean(onedimtimes);
@@ -82,7 +82,7 @@ for i = 200:10:2000
     onedimtimes = 1:10;
     x = 200:10:i;
     for j = 1:10
-        f = rand(length(x),1)';
+        f = rand(length(x));
         [A,b] = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
         tic
         simple_lu(A)
@@ -93,10 +93,8 @@ for i = 200:10:2000
 end
 
 %%
-%subplot(211)
-plot(200:10:2000,timevecnormal,200:10:2000,timevecsimple)
-%subplot(212)
-%plot(200:10:2000,timevecsimple)
+plot(200:10:2000,timevecnormal)
+plot(200:10:2000,timevecsimple)
 
 %%
 
