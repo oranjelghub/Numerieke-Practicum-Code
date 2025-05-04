@@ -1,0 +1,10 @@
+function [val] = mijnkwadratuurregel(f)
+  
+    h = 2/(length(f)-1);
+    val = (h/3)*(f(1)+f(end));
+
+    for i = 1:length(f)-1
+        val = val + ((4*h)/3)
+
+end
+

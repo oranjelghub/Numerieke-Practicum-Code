@@ -60,9 +60,9 @@ yticks((1:12))
 
 %%
 
-timevecsimple = 1:length(200:10:2000);
+timevecsimple = 1:length(200:10:4000);
 index = 1;
-for i = 200:10:2000
+for i = 200:10:3000
     onedimtimes = 1:10;
     x = 200:10:i;
     for j = 1:10
@@ -76,9 +76,9 @@ for i = 200:10:2000
     index = index+1;
 end
 
-timevecnormal = 1:length(200:10:2000);
+timevecnormal = 1:length(200:10:4000);
 index = 1;
-for i = 200:10:2000
+for i = 200:10:4000
     onedimtimes = 1:10;
     x = 200:10:i;
     for j = 1:10
@@ -94,7 +94,7 @@ end
 
 %%
 %subplot(211)
-plot(200:10:2000,timevecnormal,200:10:2000,timevecsimple)
+plot(200:10:4000,timevecnormal,200:10:4000,timevecsimple)
 %subplot(212)
 %plot(200:10:2000,timevecsimple)
 
@@ -157,3 +157,74 @@ y = evalsplineben(knp,(-3:-1)+knp(1),knp(end)+(1:3), t',f',10000);
 
 plot(x,y,'b',t',f','*r', 'MarkerSize',12)
 
+%%
+
+load('opdracht13.mat')
+
+subplot(131)
+plot(gam1met,gam2met)
+tit = title('gam2met tegenover gam1met');
+subplot(132)
+plot(rmet,gam1met)
+tit = title('gam1met tegenover rmet');
+subplot(133)
+plot(rmet,gam2met)
+tit = title('gam2met tegenover rmet');
+
+figure
+para = linspace(0,1,10000);
+x = exp(2.*para.^2).*sin(5*pi.*para);
+y = para.*cos(5*pi.*para);
+plot(x,y)
+
+figure
+%Eerst voor gam2met tov gam1met
+s1 = evalsplineint(y,x,[],[],15);
+
+%%
+load('opdracht13.mat')
+
+m = 5;
+
+para = linspace(0,1,1000);
+x = exp(2.*para.^2).*sin(5*pi.*para);
+y = para.*cos(5*pi.*para);
+sx = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam1met',10000);
+sy = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam2met',10000);
+
+%subplot(121)
+%plot(linspace(0,1,1000),sx,'b', rmet, gam1met, '*r')
+%subplot(122)
+%plot(linspace(0,1,1000),sy,'b', rmet, gam2met, '*r')
+
+plot(sx,sy, 'b',x,y,'--r')
+
+%%
+load('opdracht13.mat')
+m = 98;
+
+para = linspace(0,1,2001);
+x = exp(2.*para.^2).*sin(5*pi.*para);
+y = para.*cos(5*pi.*para);
+sx = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam1met',2001);
+sy = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam2met',2001);
+
+plot(sx,sy, 'b',x,y,'--r')
+mijnkwadratuurregel(abs(sx-x)+abs(sy-y))
+
+%%
+load('opdracht13.mat')
+para = linspace(0,1,2001);
+    x = exp(2.*para.^2).*sin(5*pi.*para);
+    y = para.*cos(5*pi.*para);
+fouten = zeros(97,1);
+for m = 2:98
+    sx = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam1met',2001);
+    sy = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam2met',2001);
+    
+    fouten(m-1) = mijnkwadratuurregel(abs(sx-x)+abs(sy-y));
+end
+
+optm = find(fouten == min(fouten))+1;
+fouten
+optm
