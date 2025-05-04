@@ -1,10 +1,7 @@
 function [A,b] = stelselsplineben(t, tbefore, tafter, x, f)
-        %Wat initiele def
     knpvec = [tbefore t tafter];
-    L = length(t); %Dit is n+1 en niet n!
+    L = length(t); 
     A = zeros(length(x),L+2);
-
-    %Opbouwen van een lijst van alle B-splines
     iter = 1;
     for i = 1:L
         while iter <= length(x) && x(iter) <= t(i+1)
@@ -14,7 +11,5 @@ function [A,b] = stelselsplineben(t, tbefore, tafter, x, f)
             iter = iter+1;
         end
     end
-  
-    %Opbouw van b
     b = f';
 end

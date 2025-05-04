@@ -1,9 +1,8 @@
-%%
+%% Vraag 2
 bspline([0,0.5,2,3,4])
 
-%%
+%% Vraag 4
 load('opdracht4.mat')
-
 x = linspace(t(1),t(end),10000);
 y = evalsplineint(t',f',t(1)+(-3:-1),t(end)+(1:3),10000);
 
@@ -13,12 +12,11 @@ legend('Interpolant','Datapunten')
 xlabel('x')
 ylabel('f(x)')
 
-%%
+%% Vraag 5
 
 p = (1:10).^2;
 [A,b] = stelselsplineint(p,1:20,(-2:0).^3,(11:13).^3);
 [L,U] = simple_lu(A);
-
 
 spy(A, 70)
 tit = title('A');
@@ -58,8 +56,7 @@ grid on
 xticks((1:12))
 yticks((1:12))
 
-%%
-
+%% Vraag 7
 timevecsimple = 1:length(200:10:4000);
 index = 1;
 for i = 200:10:3000
@@ -92,73 +89,58 @@ for i = 200:10:4000
     index = index+1;
 end
 
-%%
-%subplot(211)
 plot(200:10:4000,timevecnormal,200:10:4000,timevecsimple)
-%subplot(212)
-%plot(200:10:2000,timevecsimple)
 
-%%
-
+%% Vraag 9
 p = (1:10).^2;
 [A,b] = stelselsplineint(p,1:10,(-3:-1),(101:103));
 [L,U] = simple_lu_spline(A);
 disp((norm((A\b)' - Backsub_U(U,Backsub_L(L,b)))) / norm((A\b)'))
 
-%%
+%% Vraag 10
 
 load('opdracht4.mat')
-
 cond1 = t<0.6;
 cond2 = t>=0.6 & t<1.2;
-cond3 = t>=1.2;
-
 t1 = t(cond1);
 t2 = t(cond2);
-t3 = t(cond3);
-
 tnew = [t(1) t(6) t(9) t(12) t(14) t(16) t(18) t(20) t(21) t3'];
 fnew = [f(1) f(6) f(9) f(12) f(14) f(16) f(18) f(20) f(21) f(length([t1' t2'])+1:length(t),:)'];
-tbefore = t(1)+(-3:-1);
-tafter = t(end)+(1:3);
 
-x = linspace(t(1),t(end),10000);
-y = evalsplineint(t',f', tbefore,tafter,10000);
-yalt = evalsplineint(tnew,fnew, tbefore,tafter,10000);
+x = linspace(t(1),t(end),1000);
+y = evalsplineint(t',f', t(1)+(-3:-1),t(end)+(1:3),1000);
+yalt = evalsplineint(tnew,fnew, t(1)+(-3:-1),t(end)+(1:3),1000);
 
-grayColor = [.7 .7 .7];
-
-%subplot(311)
-%plot(x,y,'b',t',f','*r', 'MarkerSize',12)
-%subplot(312)
-%plot(x,yalt,'b',tnew,fnew,'*r', 'MarkerSize',12)
-%subplot(313)
-plot(x,y-yalt,'r', linspace(t(1),t(end),100),zeros(100), '--g' )
-tit = title('Absolute fout tussen de interpolant van vraag 4 en vraag 10');
-leg = legend('Absolute fout');
+figure
+plot(x,abs(y-yalt),'r')
+tit = title('Absolute waarde van de absolute fout tussen de interpolant van vraag 4 en vraag 10');
+tit.FontSize = 40;
+leg = legend('Absolute waarde van de absolute fout');
+leg.FontSize = 40;
 xlab = xlabel('x');
-ylab = ylabel('\Deltax');
-
+xlab.FontSize = 40;
+ylab = ylabel('|\Deltax|');
+ylab.FontSize = 40;
 
 max(y-yalt)
 
-%%
-
+%% Vraag 12
 load('opdracht4.mat')
 
 t1 = linspace(0,0.6,4);
 t2 = linspace(0.6,1.2,7);
 t3 = linspace(1.2,2,13);
 knp = [t1, t2(2:end-1),t3];
-
 x = linspace(knp(1),knp(end),10000);
 [A,b] = stelselsplineben(knp,(-3:-1)+knp(1),knp(end)+(1:3), t',f');
 y = evalsplineben(knp,(-3:-1)+knp(1),knp(end)+(1:3), t',f',10000);
+yexac = evalsplineint(t',f',(-3:-1)+t(1),t(end)+(1:3),10000);
 
 plot(x,y,'b',t',f','*r', 'MarkerSize',12)
+max(abs(y-yexac))
 
-%%
 
+%% Vraag 13
 load('opdracht13.mat')
 
 subplot(131)
@@ -177,31 +159,36 @@ x = exp(2.*para.^2).*sin(5*pi.*para);
 y = para.*cos(5*pi.*para);
 plot(x,y)
 
+interx = evalsplineint(rmet',gam1met',(-3:-1)+rmet(1),rmet(end)+(1:3),1000);
+intery = evalsplineint(rmet',gam2met',(-3:-1)+rmet(1),rmet(end)+(1:3),1000);
+benx = evalsplineben(linspace(rmet(1),rmet(end),15),(-3:-1)+rmet(1),rmet(end)+(1:3),rmet',gam1met',1000);
+beny = evalsplineben(linspace(rmet(1),rmet(end),15),(-3:-1)+rmet(1),rmet(end)+(1:3),rmet',gam2met',1000);
+
 figure
-%Eerst voor gam2met tov gam1met
-s1 = evalsplineint(y,x,[],[],15);
+subplot(131)
+plot(interx,intery)
+tit = title('Exacte interpolatie van gam1met tegenover exacte interpolatie gam2met');
+subplot(132)
+plot(linspace(rmet(1),rmet(end),1000),interx)
+tit = title('Exacte interpolatie van gam1met');
+subplot(133)
+plot(linspace(rmet(1),rmet(end),1000),intery)
+tit = title('Exacte interpolatie van gam2met');
 
-%%
+figure
+subplot(131)
+plot(benx,beny)
+tit = title('Benaderende interpolatie van gam1met tegenover benaderende interpolatie gam2met');
+subplot(132)
+plot(linspace(rmet(1),rmet(end),1000),benx)
+tit = title('Benaderende interpolatie van gam1met');
+subplot(133)
+plot(linspace(rmet(1),rmet(end),1000),beny)
+tit = title('Benaderende interpolatie van gam2met');
+
+%% Vraag 14
 load('opdracht13.mat')
-
-m = 5;
-
-para = linspace(0,1,1000);
-x = exp(2.*para.^2).*sin(5*pi.*para);
-y = para.*cos(5*pi.*para);
-sx = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam1met',10000);
-sy = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam2met',10000);
-
-%subplot(121)
-%plot(linspace(0,1,1000),sx,'b', rmet, gam1met, '*r')
-%subplot(122)
-%plot(linspace(0,1,1000),sy,'b', rmet, gam2met, '*r')
-
-plot(sx,sy, 'b',x,y,'--r')
-
-%%
-load('opdracht13.mat')
-m = 98;
+m = 14;
 
 para = linspace(0,1,2001);
 x = exp(2.*para.^2).*sin(5*pi.*para);
@@ -209,10 +196,10 @@ y = para.*cos(5*pi.*para);
 sx = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam1met',2001);
 sy = evalsplineben(linspace(0,1,m),-3:-1,2:4,rmet',gam2met',2001);
 
-plot(sx,sy, 'b',x,y,'--r')
+plot(sx,sy,'b',x,y,'--r')
 mijnkwadratuurregel(abs(sx-x)+abs(sy-y))
 
-%%
+%% Vraag 15
 load('opdracht13.mat')
 para = linspace(0,1,2001);
     x = exp(2.*para.^2).*sin(5*pi.*para);
