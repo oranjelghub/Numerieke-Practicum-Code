@@ -202,7 +202,11 @@ y = para.*cos(5*pi.*para);
 x_ben = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam1met',2001);
 y_ben = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam2met',2001);
 
+disp(stelselsplineben(linspace(0,1,m),(-1:-3)+t(1),t(end)+(1:3),rmet',gam1met'))
+
+
 mijnkwadratuurregel(abs(x_ben-x)+abs(y_ben-y))
+plot(x,y,'--r',x_ben,y_ben,'b')
 
 %% Vraag 15
 load('opdracht13.mat')
@@ -220,5 +224,5 @@ for m = 2:98
 end
 
 optm = find(fouten == min(fouten))+1;
-plot(2:98,fouten)
+semilogy(2:98,fouten)
 
