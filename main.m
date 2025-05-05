@@ -186,17 +186,25 @@ max(y-y_alt)
 %% Vraag 12
 load('opdracht4.mat')
 
+%Knopen
 t1 = linspace(0,0.6,4);
 t2 = linspace(0.6,1.2,7);
 t3 = linspace(1.2,2,13);
-
 knopen = [t1, t2(2:end-1),t3];
+
+%Data en figuur
 x = linspace(knp(1),knopen(end),10000);
 y = evalsplineint(t',f',(-3:-1)+t(1),t(end)+(1:3),10000);
 y_ben = evalsplineben(knopen,(-3:-1)+knopen(1),knopen(end)+(1:3), t',f',10000);
 
-plot(x,y,'b',t',f','*r', 'MarkerSize',12)
-max(abs(y-yexac))
+plot(x,y,'b',t',f','*r', 'MarkerSize',8)
+title('Benadering van Sexy Spline')
+legend('Interpolant','Knooppunten', 'Location', 'northwest')
+xlabel('x')
+ylabel('y')
+
+%Maximale absolute fout
+max(abs(y_ben-y))
 
 %% Vraag 13
 load('opdracht13.mat')
