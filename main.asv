@@ -36,6 +36,7 @@ yticks((1:12))
 
 %Figuur van L en U
 figure
+
 subplot(121)
 spy(L, 20)
 
@@ -44,38 +45,46 @@ lgd = legend('Niet-nulelementen');
 xlab = xlabel('Kollom index van element van L');
 ylab = ylabel('Rij index van element van L');
 
-
-lgd.FontSize = 15;
-xlab2.FontSize = 15;
-ylab2.FontSize = 15;
+tit.FontSize = 10;
+lgd.FontSize = 8;
+xlab.FontSize = 8;
+ylab.FontSize = 8;
 
 grid on
 xticks((1:12))
 yticks((1:12))
 
 subplot(122)
-spy(U, 50)
-lgd3 = legend('Niet nul elementen');
-lgd3.FontSize = 15;
-xlab3 = xlabel('Kollom index van element van U');
-ylab3 = ylabel('Rij index van element van U');
-xlab3.FontSize = 15;
-ylab3.FontSize = 15;
+spy(U, 20)
+
+tit = title('Matrix U');
+lgd = legend('Niet-nulelementen');
+xlab = xlabel('Kollom index van element van U');
+ylab = ylabel('Rij index van element van U');
+
+tit.FontSize = 10;
+lgd.FontSize = 8;
+xlab.FontSize = 8;
+ylab.FontSize = 8;
+
 grid on
 xticks((1:12))
 yticks((1:12))
 
-%% Vraag 7
-timevec_luspline = 1:length(200:10:2000);
+%% Vraag 7 (Data en grafieken)
+timevec_luspline = 1:181;
+timevec_lu = 1:181;
 index = 1;
 
+%Rekentijden voor simple_lu_spline
 for i = 200:10:2000
     onedim_times = 1:10;
     x = 1:i;
 
     for j = 1:10
         f = rand(i,1)';
-        [A,b] = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
+        A = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
+
         tic
         [C,d] = simple_lu_spline(A);
         onedim_times(j) = toc;
@@ -84,16 +93,16 @@ for i = 200:10:2000
     index = index+1;
 
 end
-timevec_lu = 1:length(200:10:2000);
 index = 1;
 
+%Rekentijden voor simple_lu_spline
 for i = 200:10:2000
     onedim_times = 1:10;
     x = 1:i;
 
     for j = 1:10
         f = rand(i,1)';
-        [A,b] = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
+        A = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
         tic
         [C,d] = simple_lu(A);
         onedim_times(j) = toc;
@@ -102,14 +111,44 @@ for i = 200:10:2000
     index = index+1;
 
 end
-%%
+
+%Figuren genereren
+figure
+
+%Logaritmische plot
+subplot(121)
+semilogy(200:10:2000,timevec_lu,200:10:2000,timevec_luspline)
+
+tit = title('Rekentijd t.o.v. dimensie (logaritmische schaal)');
+lgd = legend('Simple lu','Simple lu spline');
+xlab = xlabel('Dimensie van de matrices');
+ylab = ylabel('Gemmiddelde rekentijd (s)');
+
+tit.FontSize = 12;
+lgd.FontSize = 15;
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
+%Normale plot
+subplot(122)
 plot(200:10:2000,timevec_lu,200:10:2000,timevec_luspline)
 
+tit = title('Rekentijd t.o.v. dimensie ');
+lgd = legend('Simple lu','Simple lu spline');
+xlab = xlabel('Dimensie van de matrices');
+ylab = ylabel('Gemiddelde rekentijd (s)');
+
+tit.FontSize = 12;
+lgd.FontSize = 15;
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
 %% Vraag 9
-p = (1:10).^2;
-[A,b] = stelselsplineint(p,1:10,(-3:-1),(101:103));
+x = (1:10).^2;
+A = stelselsplineint(x,1:20,-2:0,101:103);
 [L,U] = simple_lu_spline(A);
 
+%Relatieve fout op het antwoord bekomen door de backslashoperator
 disp((norm((A\b)' - Backsub_U(U,Backsub_L(L,b)))) / norm((A\b)'))
 
 %% Vraag 10

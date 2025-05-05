@@ -71,7 +71,7 @@ grid on
 xticks((1:12))
 yticks((1:12))
 
-%% Vraag 7
+%% Vraag 7 (Data en grafieken)
 timevec_luspline = 1:181;
 timevec_lu = 1:181;
 index = 1;
@@ -111,19 +111,52 @@ for i = 200:10:2000
     index = index+1;
 
 end
-%%
+
+%Figuren genereren
+figure
+
+%Logaritmische plot
+subplot(121)
+semilogy(200:10:2000,timevec_lu,200:10:2000,timevec_luspline)
+
+tit = title('Rekentijd t.o.v. dimensie (logaritmische schaal)');
+lgd = legend('Simple lu','Simple lu spline');
+xlab = xlabel('Dimensie van de matrices');
+ylab = ylabel('Gemmiddelde rekentijd (s)');
+
+tit.FontSize = 12;
+lgd.FontSize = 15;
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
+%Normale plot
+subplot(122)
 plot(200:10:2000,timevec_lu,200:10:2000,timevec_luspline)
 
+tit = title('Rekentijd t.o.v. dimensie ');
+lgd = legend('Simple lu','Simple lu spline');
+xlab = xlabel('Dimensie van de matrices');
+ylab = ylabel('Gemiddelde rekentijd (s)');
+
+tit.FontSize = 12;
+lgd.FontSize = 15;
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
+%% Vraag 7 (Rekencomplixeit)
+
 %% Vraag 9
-p = (1:10).^2;
-[A,b] = stelselsplineint(p,1:10,(-3:-1),(101:103));
+x = (1:10).^2;
+A = stelselsplineint(x,1:20,-2:0,101:103);
 [L,U] = simple_lu_spline(A);
 
+%Relatieve fout op het antwoord bekomen door de backslashoperator
 disp((norm((A\b)' - Backsub_U(U,Backsub_L(L,b)))) / norm((A\b)'))
 
 %% Vraag 10
 load('opdracht4.mat')
 
+%Nieuwe knooppunten
 t1 = t(t<0.6);
 t2 = t(t>=0.6 & t<1.2);
 t3 = t(t>=1.2);
@@ -134,18 +167,21 @@ x = linspace(t(1),t(end),1000);
 y = evalsplineint(t',f', t(1)+(-3:-1),t(end)+(1:3),1000);
 y_alt = evalsplineint(tnew,fnew, t(1)+(-3:-1),t(end)+(1:3),1000);
 
+%Figuur
 figure
 plot(x,abs(y-y_alt),'r')
 tit = title('Absolute waarde van de absolute fout tussen de interpolant van vraag 4 en vraag 10');
-tit.FontSize = 40;
-leg = legend('Absolute waarde van de absolute fout');
-leg.FontSize = 40;
+lgd = legend('Absolute waarde van de absolute fout');
 xlab = xlabel('x');
-xlab.FontSize = 40;
 ylab = ylabel('|\Deltax|');
-ylab.FontSize = 40;
 
-max(y-yalt)
+tit.FontSize = 15;
+lgd.FontSize = 15;
+xlab.FontSize = 20;
+ylab.FontSize = 20;
+
+%Maximale absolute fout
+max(y-y_alt)
 
 %% Vraag 12
 load('opdracht4.mat')
