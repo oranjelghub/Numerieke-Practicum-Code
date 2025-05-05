@@ -16,7 +16,7 @@ ylabel('f(x)')
 
 p = (1:10).^2;
 [A,b] = stelselsplineint(p,1:20,(-2:0).^3,(11:13).^3);
-[L,U] = simple_lu(A);
+[L,U] = simple_lu_spline(A);
 
 spy(A, 70)
 tit = title('A');
@@ -62,16 +62,16 @@ index = 1;
 
 for i = 200:10:2000
     onedim_times = 1:10;
-    x = 200:10:i;
+    x = 1:i;
 
     for j = 1:10
-        f = rand(length(x),1)';
+        f = rand(i,1)';
         [A,b] = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
         tic
-        simple_lu_spline(A)
+        [C,d] = simple_lu_spline(A);
         onedim_times(j) = toc;
     end
-    timevec_luspline(index) = mean(onedimtimes);
+    timevec_luspline(index) = mean(onedim_times);
     index = index+1;
 
 end
@@ -80,20 +80,21 @@ index = 1;
 
 for i = 200:10:2000
     onedim_times = 1:10;
-    x = 200:10:i;
+    x = 1:i;
 
     for j = 1:10
-        f = rand(length(x),1)';
+        f = rand(i,1)';
         [A,b] = stelselsplineint(x,f,(-3:-1)+x(1),x(end)+(1:3));
         tic
-        simple_lu(A)
+        [C,d] = simple_lu(A);
         onedim_times(j) = toc;
     end
-    timevec_lu(index) = mean(onedimtimes);
+    timevec_lu(index) = mean(onedim_times);
     index = index+1;
 
 end
-plot(200:10:4000,timevecnormal,200:10:4000,timevecsimple)
+%%
+plot(200:10:2000,timevec_lu,200:10:2000,timevec_luspline)
 
 %% Vraag 9
 p = (1:10).^2;
@@ -107,6 +108,7 @@ load('opdracht4.mat')
 
 t1 = t(t<0.6);
 t2 = t(t>=0.6 & t<1.2);
+t3 = t(t>=1.2);
 tnew = [t(1) t(6) t(9) t(12) t(14) t(16) t(18) t(20) t(21) t3'];
 fnew = [f(1) f(6) f(9) f(12) f(14) f(16) f(18) f(20) f(21) f(length([t1' t2'])+1:length(t),:)'];
 
@@ -178,15 +180,15 @@ plot(linspace(rmet(1),rmet(end),1000),y_interpol)
 tit = title('Exacte interpolatie van gam2met');
 
 figure
-subplot(131)optm
+subplot(131)
 plot(2:98,fouten)
-plot(benx,beny)
+plot(x_ben,y_ben)
 tit = title('Benaderende interpolatie van gam1met tegenover benaderende interpolatie gam2met');
 subplot(132)
-plot(linspace(rmet(1),rmet(end),1000),benx)
+plot(linspace(rmet(1),rmet(end),1000),x_ben)
 tit = title('Benaderende interpolatie van gam1met');
 subplot(133)
-plot(linspace(rmet(1),rmet(end),1000),beny)
+plot(linspace(rmet(1),rmet(end),1000),y_ben)
 tit = title('Benaderende interpolatie van gam2met');
 
 %% Vraag 14
@@ -218,6 +220,5 @@ for m = 2:98
 end
 
 optm = find(fouten == min(fouten))+1;
-fouten(optm-1)
 plot(2:98,fouten)
 
