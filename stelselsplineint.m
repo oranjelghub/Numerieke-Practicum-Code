@@ -1,8 +1,7 @@
 function [A,b] = stelselsplineint(t, f, tbefore, tafter)
 
-    %Wat initiele def
     knpvec = [tbefore t tafter];
-    L = length(t); %Dit is n+1 en niet n!
+    L = length(t); 
     A = zeros(L+2);
 
     %Opbouwen van een lijst van alle B-splines
