@@ -347,4 +347,4 @@ end
 optimale_m = find(fouten == min(fouten))+1;
 disp(optimale_m)
 
-semilogy(2:98,fouten)
+plot(2:98,fouten)
