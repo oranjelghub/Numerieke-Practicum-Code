@@ -112,15 +112,17 @@ for i = 200:10:2000
 
 end
 
+save('Data_vraag7.mat', "timevec_lu", "timevec_luspline")
+
 %Figuren genereren
 figure
 
 %Logaritmische plot
 subplot(121)
-semilogy(200:10:2000,timevec_lu,200:10:2000,timevec_luspline)
+semilogy(200:10:2000,timevec_lu,200:10:2000,timevec_luspline,200:10:2000,(timevec_luspline(end)/(2000)^2)*((200:10:2000).^2),200:10:2000,(timevec_lu(end)/(2000)^3)*((200:10:2000).^3))
 
 tit = title('Rekentijd t.o.v. dimensie (logaritmische schaal)');
-lgd = legend('Simple lu','Simple lu spline');
+lgd = legend('Simple lu','Simple lu spline','K_1x^2','K_2x^3');
 xlab = xlabel('Dimensie van de matrices');
 ylab = ylabel('Gemmiddelde rekentijd (s)');
 
@@ -143,7 +145,6 @@ lgd.FontSize = 15;
 xlab.FontSize = 15;
 ylab.FontSize = 15;
 
-%% Vraag 7 (Rekencomplixeit)
 
 %% Vraag 9
 x = (1:10).^2;
@@ -207,24 +208,52 @@ ylabel('y')
 max(abs(y_ben-y))
 
 %% Vraag 13
-load('opdracht13.mat')
+load("opdracht13.mat")
 
+%a
 subplot(131)
-plot(gam1met,gam2met)
-tit = title('gam2met tegenover gam1met');
-subplot(132)
 plot(rmet,gam1met)
-tit = title('gam1met tegenover rmet');
-subplot(133)
-plot(rmet,gam2met)
-tit = title('gam2met tegenover rmet');
+tit = title('gam1met t.o.v. rmet');
+xlab = xlabel('rmet');
+ylab = ylabel('gam1met');
 
+tit.FontSize = 20;
+xlab.FontSize = 20;
+ylab.FontSize = 20;
+
+subplot(132)
+plot(rmet,gam2met)
+tit = title('gam2met t.o.v. rmet');
+xlab = xlabel('rmet');
+ylab = ylabel('gam2met');
+
+tit.FontSize = 20;
+xlab.FontSize = 20;
+ylab.FontSize = 20;
+
+subplot(133)
+plot(gam1met,gam2met)
+tit = title('gam2met t.o.v. gam1met');
+xlab = xlabel('gam1met');
+ylab = ylabel('gam2met');
+
+tit.FontSize = 20;
+xlab.FontSize = 20;
+ylab.FontSize = 20;
+
+%b
 figure
 para = linspace(0,1,10000);
 x = exp(2.*para.^2).*sin(5*pi.*para);
 y = para.*cos(5*pi.*para);
 plot(x,y)
+title('Kromme van de parametrisatie');
+fontsize(12,"points");
+legend('\gamma');
+xlabel('x');
+ylabel('y');
 
+%c
 x_interpol = evalsplineint(rmet',gam1met',(-3:-1)+rmet(1),rmet(end)+(1:3),1000);
 y_interpol = evalsplineint(rmet',gam2met',(-3:-1)+rmet(1),rmet(end)+(1:3),1000);
 x_ben = evalsplineben(linspace(rmet(1),rmet(end),15),(-3:-1)+rmet(1),rmet(end)+(1:3),rmet',gam1met',1000);
@@ -232,26 +261,60 @@ y_ben = evalsplineben(linspace(rmet(1),rmet(end),15),(-3:-1)+rmet(1),rmet(end)+(
 
 figure
 subplot(131)
-plot(x_interpol,y_interpol)
-tit = title('Exacte interpolatie van gam1met tegenover exacte interpolatie gam2met');
-subplot(132)
 plot(linspace(rmet(1),rmet(end),1000),x_interpol)
 tit = title('Exacte interpolatie van gam1met');
-subplot(133)
+xlab = xlabel('rmet');
+ylab = ylabel('gam1met');
+
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
+subplot(132)
 plot(linspace(rmet(1),rmet(end),1000),y_interpol)
 tit = title('Exacte interpolatie van gam2met');
+xlab = xlabel('rmet');
+ylab = ylabel('gam2met');
+
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
+subplot(133)
+plot(x_interpol,y_interpol)
+tit = title('Exacte interpolatie van gam2met t.o.v. die van gam1met');
+xlab = xlabel('gam1met');
+ylab = ylabel('gam2met');
+
+xlab.FontSize = 15;
+ylab.FontSize = 15;
 
 figure
 subplot(131)
-plot(2:98,fouten)
-plot(x_ben,y_ben)
-tit = title('Benaderende interpolatie van gam1met tegenover benaderende interpolatie gam2met');
-subplot(132)
 plot(linspace(rmet(1),rmet(end),1000),x_ben)
 tit = title('Benaderende interpolatie van gam1met');
-subplot(133)
+xlab = xlabel('rmet');
+ylab = ylabel('gam1met');
+
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
+subplot(132)
 plot(linspace(rmet(1),rmet(end),1000),y_ben)
 tit = title('Benaderende interpolatie van gam2met');
+xlab = xlabel('rmet');
+ylab = ylabel('gam2met');
+
+xlab.FontSize = 15;
+ylab.FontSize = 15;
+
+subplot(133)
+plot(x_ben,y_ben)
+tit = title('Benaderende interpolatie van gam1met t.o.v. die van gam2met');
+xlab = xlabel('gam1met');
+ylab = ylabel('gam2met');
+
+tit.FontSize = 10;
+xlab.FontSize = 15;
+ylab.FontSize = 15;
 
 %% Vraag 14
 load('opdracht13.mat')
@@ -264,11 +327,7 @@ y = para.*cos(5*pi.*para);
 x_ben = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam1met',2001);
 y_ben = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam2met',2001);
 
-disp(stelselsplineben(linspace(0,1,m),(-1:-3)+t(1),t(end)+(1:3),rmet',gam1met'))
-
-
 mijnkwadratuurregel(abs(x_ben-x)+abs(y_ben-y))
-plot(x,y,'--r',x_ben,y_ben,'b')
 
 %% Vraag 15
 load('opdracht13.mat')
@@ -279,12 +338,13 @@ y = para.*cos(5*pi.*para);
 fouten = zeros(97,1);
 
 for m = 2:98
-    sx = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam1met',2001);
-    sy = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam2met',2001);
+    x_ben = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam1met',2001);
+    y_ben = evalsplineben(linspace(0,1,m),[-0.6,-0.4,-0.2],[1.2, 1.4, 1.6],rmet',gam2met',2001);
     
-    fouten(m-1) = mijnkwadratuurregel(abs(sx-x)+abs(sy-y));
+    fouten(m-1) = mijnkwadratuurregel(abs(x_ben-x)+abs(y_ben-y));
 end
 
-optm = find(fouten == min(fouten))+1;
-semilogy(2:98,fouten)
+optimale_m = find(fouten == min(fouten))+1;
+disp(optimale_m)
 
+semilogy(2:98,fouten)
